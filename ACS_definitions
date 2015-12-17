@@ -1,0 +1,139 @@
+#Code Algorithm
+
+#Generate World:
+	#Create Cities, Roads and Evaluate Roads_cost (different than Lenght)
+class Edge:
+
+	def __init__(self, origin, dest, cost):
+		self.origin = origin
+		self.dest = dest
+		self.cost = cost
+		self.pherom = None
+
+	def getOrigin(self):
+		return self.origin
+
+	def getDest(self):
+		return self.dest
+
+	def getCost(self):
+		return self.cost
+
+	def getPherom(self):
+		return self.pherom
+
+	def setPherom(self, pherom):
+		self.pherom = pherom
+
+	#Create Graph - Map 
+class Graph:
+
+	def __init__(self, num_vertices):
+		self.num_vertices = num_vertices # number of vertices/cities
+		self.edges = {} # list of edges/roads
+		self.neighbours = {} # list of neighbour
+
+
+	def addEdge(self, origin, dest, cost):
+		edge = Edge(origin=origin, dest=dest, cost=cost)
+		self.edges[(origin, dest)] = edge
+		if origin not in self.neighbours:
+			self.neighbours[origin] = [dest]
+		else:
+			self.neighbours[origin].append(dest)
+
+	def getCostEdge(self, origin, dest):
+		return self.edges[(origin, dest)].getCost()
+
+	def getPheromEdge(self, origin, dest):
+		return self.edges[(origin, dest)].getPherom()
+
+	def setPheromEdge(self, origin, dest, Pherom):
+		self.edges[(origin, dest)].setPherom(Pherom)
+
+	def getCostTour(self, tour):
+		cost = 0
+		for i in range(self.num_vertices - 1):
+			cost += self.getCostEdge(tour[i], tour[i+1])
+		# add last cost
+		cost += self.getCostEdge(tour[-1], tour[0])
+		return cost
+
+	def generateRandom(self):
+		for i in range(1, self.num_vertices + 1):
+			for j in range(1, self.num_vertices + 1):
+				if i != j:
+					cost = random.randint(1, 10)
+					self.addEdge(i, j, cost)
+
+
+
+
+#Generate Colony:
+	# Generate Ant
+class Ant:
+
+	def __init__(self, city):
+		self.city = city
+		self.solution = []
+		self.cost = None
+
+	def getCity(self):
+		return self.city
+
+	def setCity(self, city):
+		self.city = city
+
+	def getSolution(self):
+		return self.solution
+
+	def setSolution(self, solution, cost):
+		# update solution
+		if not self.cost:
+			self.solution = solution[:]
+			self.cost = cost
+		else:
+			if cost < self.cost:
+				self.solution = solution[:]
+				self.cost = cost
+
+	def getCostSolution(self):
+		return self.cost
+
+
+class ACO:
+
+	def __init__(self, graph, num_ant, alpha=1.0, beta=5.0, 
+						num_gen=10, rho=0.5):
+		self.graph = graph
+		self.num_ant = num_ant
+		self.alpha = alpha # pheromon importance
+		self.beta = beta # distance importance
+		self.num_gen = num_gen # number of generations of the nest
+		self.rho = rho # Evaporation Rate
+		self.ants = [] # ants list
+	
+
+Find Best Path:
+	Best_tour # global list of bests tours -> different tour with the same distance
+	Best_distance  # global variable with the best distance value
+	For each Generation #(Iteration)
+		while(All_ants_in_nest) #time simulation
+			For each Ant #(One Generation Colony)
+				Check actual city != first city
+				Evaluate Probabilities
+				Choose next city -> city with High Probability
+				Go to next city
+				add next city to tour
+				update tour lenght
+			For each Ant # After all ants reach the next city #simultaneos run simulation
+				decay_pheromone(Road[cityA][cityB])
+				deposit_pheromone(Road[cityA][cityB])
+		For each Ant #Update best tour after one generation
+			if Ant.tour_distance < best_distance # Check if the Ant tour is better than actual best tour
+				best_distance = Ant.tour_distance
+				best_tour = [Ant.tour]
+			elif Ant.tour_distance == best_distance and not Ant.tour in best_tour # Check if the Ant tour is equal as the best tour, and add that tour to the best tour list
+				best_tour.append(Ant.tour)
+			
+	
