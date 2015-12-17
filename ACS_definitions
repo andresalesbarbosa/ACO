@@ -100,7 +100,7 @@ class Ant:
 	def getCostSolution(self):
 		return self.cost
 
-
+#Find Best Path
 class ACO:
 
 	def __init__(self, graph, num_ant, alpha=1.0, beta=5.0, 
@@ -112,7 +112,16 @@ class ACO:
 		self.num_gen = num_gen # number of generations of the nest
 		self.rho = rho # Evaporation Rate
 		self.ants = [] # ants list
-	
+		list_cities = [city for city in range(1,self.graph.num_vertices+1)]
+
+	lista_cidades = [cidade for cidade in range(1, self.grafo.num_vertices + 1)]
+		# cria as formigas colocando cada uma em uma cidade
+		for k in range(self.num_formigas):
+			cidade_formiga = random.choice(lista_cidades)
+			lista_cidades.remove(cidade_formiga)
+			self.formigas.append(Formiga(cidade=cidade_formiga))
+			if not lista_cidades:
+				lista_cidades = [cidade for cidade in range(1, self.grafo.num_vertices + 1)]
 
 Find Best Path:
 	Best_tour # global list of bests tours -> different tour with the same distance
