@@ -129,7 +129,7 @@ def main():
     #world_vm1084 = pants.World(vm1084,euclidean)
     worlds = [world_burma14,world_berlin52,world_rd100]#,world_tsp225,world_pcb442,world_u574,world_u1060,world_vm1084]
     names = ['burma14.test','berlin52.test','rd100.test']#,'tsp225.test','pcb442.test','u574.test','u1060.test','vm1084.test']
-    med = 0
+    
     for limit in limits:
         for ant in ants:
             for alpha in alphas:
@@ -137,6 +137,7 @@ def main():
                     for rho in rhos:
                         for elite in elites:
                             for index,world in enumerate(worlds):
+								med = 0
                                 for i in range(30):
                                     solver = pants.Solver(ant_count=ant,alpha=alpha,beta=beta,rho=rho,elite=elite,limit=limit)
                                     solution = solver.solve(world)
@@ -150,6 +151,7 @@ def main():
                                 string = 'Med \tant: {0}\talpha: {1}\tbeta: {2}\trho: {3}\telite: {4}\tlimit: {5}\tdistance: {6}\n'.format(ant,alpha,beta,rho,elite,limit,int(med/30),i=i)
                                 fo.write(string)
                                 fo.close()
+								print('World: '+names[index]+' '+string)
     print('finish')
     
 main()
